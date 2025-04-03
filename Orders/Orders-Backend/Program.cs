@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using Orders_Backend.Data;
+
 namespace Orders_Backend
 {
     public class Program
@@ -10,9 +13,12 @@ namespace Orders_Backend
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var app = builder.Build();
 
