@@ -28,7 +28,7 @@ namespace Orders_Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var countries = await _context.Countries.ToListAsync();
+            var countries = await _context.Countries.AsNoTracking().ToListAsync();
             return Ok(countries);
         }
 
