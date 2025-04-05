@@ -7,24 +7,24 @@ namespace Orders_Frontend.Pages.Countries
 {
     public partial class CountryCreate
     {
-        private Country _country = new();
-        private CountryForm? _countryForm;
-        [Inject] private IRepository _repository { get; set; } = null!;
-        [Inject] private SweetAlertService _sweetAlertService { get; set; } = null!;
-        [Inject] private NavigationManager  _navigationManager {  get; set; } = null!;
+        private Country country = new();
+        private CountryForm? countryForm;
+        [Inject] private IRepository repository { get; set; } = null!;
+        [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
+        [Inject] private NavigationManager  navigationManager {  get; set; } = null!;
 
         private async Task CreateAsync()
         {
-            var responseHttp = await _repository.PostAsync("/api/countries", _country);
+            var responseHttp = await repository.PostAsync("/api/countries", country);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
-                await _sweetAlertService.FireAsync("Error", message);
+                await sweetAlertService.FireAsync("Error", message);
                 return;
             }
 
             Return();
-            var toast = _sweetAlertService.Mixin(new SweetAlertOptions
+            var toast = sweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
                 Position  = SweetAlertPosition.BottomEnd,
@@ -37,8 +37,11 @@ namespace Orders_Frontend.Pages.Countries
 
         private void Return()
         {
-            _countryForm!.FormPostedSuccessfully = true;
-            _navigationManager.NavigateTo("/countries");
+            if (countryForm is not null)
+            {
+                countryForm.FormPostedSuccessfully = true;
+            }
+            navigationManager.NavigateTo("/countries");
         }
     }
 }

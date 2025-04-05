@@ -11,7 +11,7 @@ namespace Orders_Frontend.Pages.Countries
         private EditContext _editContext = null!;
 
         [EditorRequired, Parameter] public Country Country { get; set; } = null!;
-        [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
+        [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; } 
         [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
         [Inject] public SweetAlertService SweetAlertService { get; set; } = null!;
         public bool FormPostedSuccessfully { get; set; }
