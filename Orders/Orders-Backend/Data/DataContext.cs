@@ -9,11 +9,13 @@ namespace Orders_Backend.Data
         
 
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Country>().HasIndex(i => i.Name).IsUnique();
+            modelBuilder.Entity<Category>().HasIndex(i => i.Name).IsUnique();
         }
     }
 }

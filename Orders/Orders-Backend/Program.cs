@@ -2,6 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Orders_Backend.Data;
+using Orders_Backend.Repositories.Implementations;
+using Orders_Backend.Repositories.Interfaces;
+using Orders_Backend.UnitOfWork.Implementations;
+using Orders_Backend.UnitOfWork.Interfaces;
 
 namespace Orders_Backend
 {
@@ -28,6 +32,8 @@ namespace Orders_Backend
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();
 
