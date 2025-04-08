@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Orders_Backend.Data;
@@ -32,16 +31,31 @@ namespace Orders_Backend
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();
 
+            //Inyecyamos el seedDB manualmente ya que el program no se deja inyectar
+            SeedData(app);
+
+            void SeedData(WebApplication app)
+            {
+                var scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+
+                using (var scoped =  scopedFactory!.CreateScope() )
+                {
+                    var service = scoped.ServiceProvider.GetService<SeedDb>();
+                    service!.SeedAsync().Wait();
+                }
+            }
+
             app.UseCors(c => c
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true)
-                .AllowCredentials());
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed(origin => true)
+                    .AllowCredentials());
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -53,7 +67,6 @@ namespace Orders_Backend
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
