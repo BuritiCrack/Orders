@@ -1,0 +1,12 @@
+﻿@page "/categories/edit/{Id:int}"
+
+<h3>Editar categoria</h3>
+
+@if(category == null)
+{
+    <Loading/>
+}
+else
+{
+    <FormWithName @ref="categoryForm" Label="Categoria" Model="category" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}

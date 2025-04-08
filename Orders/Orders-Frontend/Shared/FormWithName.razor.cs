@@ -2,16 +2,17 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
-using Orders_Shared.Entities;
+using Orders_Shared.Interfaces;
 
-namespace Orders_Frontend.Pages.Countries
+namespace Orders_Frontend.Shared
 {
-    public partial class CountryForm
+    public partial class FormWithName<TModel> where TModel : IEntityWithName
     {
         private EditContext _editContext = null!;
 
-        [EditorRequired, Parameter] public Country Country { get; set; } = null!;
-        [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; } 
+        [EditorRequired, Parameter] public TModel Model { get; set; } = default!;
+        [EditorRequired, Parameter] public string Label { get; set; } = null!;
+        [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
         [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
         [Inject] public SweetAlertService SweetAlertService { get; set; } = null!;
         public bool FormPostedSuccessfully { get; set; }
@@ -19,7 +20,7 @@ namespace Orders_Frontend.Pages.Countries
         // Tenermos que sobreescribir para cargar el contexto
         protected override void OnInitialized()
         {
-            _editContext = new(Country);
+            _editContext = new(Model);
         }
 
         // Me sirve para preguntar si me sali del formulario sin guardar los cambios

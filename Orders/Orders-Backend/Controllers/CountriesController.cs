@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Orders_Backend.Data;
 using Orders_Backend.UnitOfWork.Interfaces;
 using Orders_Shared.Entities;
 
