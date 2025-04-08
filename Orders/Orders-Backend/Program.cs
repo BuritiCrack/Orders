@@ -44,7 +44,7 @@ namespace Orders_Backend
             {
                 var scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 
-                using (var scoped =  scopedFactory!.CreateScope() )
+                using (var scoped =  scopedFactory!.CreateScope())
                 {
                     var service = scoped.ServiceProvider.GetService<SeedDb>();
                     service!.SeedAsync().Wait();
