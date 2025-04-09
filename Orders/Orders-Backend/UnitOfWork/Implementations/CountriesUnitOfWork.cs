@@ -1,0 +1,23 @@
+﻿using Orders_Backend.Repositories.Interfaces;
+using Orders_Backend.UnitOfWork.Interfaces;
+using Orders_Shared.Entities;
+using Orders_Shared.Responses;
+
+namespace Orders_Backend.UnitOfWork.Implementations
+{
+    public class CountriesUnitOfWork : GenericUnitOfWork<Country>, ICountriesUnitOfWork
+    {
+        private readonly ICountriesRepository _countriesRepository;
+
+        public CountriesUnitOfWork(IGenericRepository<Country> repository, ICountriesRepository countriesRepository) : base(repository)
+        {
+            _countriesRepository = countriesRepository;
+        }
+
+        public override async Task<ActionResponse<Country>> GetAsync(int id)
+            => await _countriesRepository.GetAsync(id);
+
+        public override async Task<ActionResponse<IEnumerable<Country>>> GetAsync()
+            => await _countriesRepository.GetAsync();
+    }
+}

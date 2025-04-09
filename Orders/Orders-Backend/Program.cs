@@ -5,6 +5,7 @@ using Orders_Backend.Repositories.Implementations;
 using Orders_Backend.Repositories.Interfaces;
 using Orders_Backend.UnitOfWork.Implementations;
 using Orders_Backend.UnitOfWork.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Orders_Backend
 {
@@ -16,7 +17,9 @@ namespace Orders_Backend
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services
+                .AddControllers()
+                .AddJsonOptions(c => c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -32,8 +35,12 @@ namespace Orders_Backend
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddTransient<SeedDb>();
-            builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+
+            builder.Services.AddScoped(typeof(ICountriesRepository), typeof(CountriesRepository));
+            builder.Services.AddScoped(typeof(ICountriesUnitOfWork), typeof(CountriesUnitOfWork));
 
             var app = builder.Build();
 
@@ -44,7 +51,7 @@ namespace Orders_Backend
             {
                 var scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 
-                using (var scoped =  scopedFactory!.CreateScope())
+                using (var scoped = scopedFactory!.CreateScope())
                 {
                     var service = scoped.ServiceProvider.GetService<SeedDb>();
                     service!.SeedAsync().Wait();
