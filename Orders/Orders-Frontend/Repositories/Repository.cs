@@ -7,7 +7,7 @@ namespace Orders_Frontend.Repositories
     {
         private readonly HttpClient _httpClient;
 
-        private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions
+        private JsonSerializerOptions JsonDefaultOptions => new()
         {
             PropertyNameCaseInsensitive = true
         };
@@ -82,7 +82,7 @@ namespace Orders_Frontend.Repositories
         private async Task<T> UnserializeAnswerAsync<T>(HttpResponseMessage responseHttp)
         {
             var response = await responseHttp.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(response, _jsonDefaultOptions)!;
+            return JsonSerializer.Deserialize<T>(response, JsonDefaultOptions)!;
         }
     }
 }
