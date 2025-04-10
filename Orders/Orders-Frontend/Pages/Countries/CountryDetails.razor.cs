@@ -9,7 +9,7 @@ namespace Orders_Frontend.Pages.Countries
 {
     public partial class CountryDetails
     {
-        private Country? Country;
+        private Country? country;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -38,7 +38,7 @@ namespace Orders_Frontend.Pages.Countries
                 return;
             }
 
-            Country = responseHttp.Response;
+            country = responseHttp.Response;
 
         }
 

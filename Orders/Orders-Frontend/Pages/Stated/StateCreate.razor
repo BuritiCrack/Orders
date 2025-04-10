@@ -1,0 +1,5 @@
+﻿@page "/states/create/{CountryId:int}"
+
+<h3>Crear Estado/Departamento</h3>
+
+<FormWithName @ref="stateForm" Model="state" Label="Estado/Departamento" OnValidSubmit="CreateAsync" ReturnAction="Return" />
