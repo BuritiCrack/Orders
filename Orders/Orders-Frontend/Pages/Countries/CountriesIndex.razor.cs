@@ -45,7 +45,7 @@ namespace Orders_Frontend.Pages.Countries
                 return;
             }
 
-            var responseHttp = await Repository.Deleteync<Country>($"/api/countries/{country.Id}");
+            var responseHttp = await Repository.DeleteAsync<Country>($"/api/countries/{country.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)

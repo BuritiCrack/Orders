@@ -13,7 +13,7 @@ namespace Orders_Shared.Entities
         public string Name { get; set; } = null!;
         public ICollection<State>? States { get; set; }
 
-        [Display(Name = "Estados / Departamentos")]
+        [Display(Name = "Departamentos / Estados")]
         public int StatesNuember => States == null || States.Count == 0 ? 0 : States.Count; 
     }
 }

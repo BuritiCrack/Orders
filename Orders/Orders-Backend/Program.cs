@@ -52,7 +52,7 @@ namespace Orders_Backend
 
             void SeedData(WebApplication app)
             {
-                var scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+                var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
 
                 using (var scoped = scopedFactory!.CreateScope())
                 {

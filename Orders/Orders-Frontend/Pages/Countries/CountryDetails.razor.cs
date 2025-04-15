@@ -60,7 +60,7 @@ namespace Orders_Frontend.Pages.Countries
                 return;
             }
 
-            var responseHttp = await Repository.Deleteync<State>($"/api/states/{state.Id}");
+            var responseHttp = await Repository.DeleteAsync<State>($"/api/states/{state.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)

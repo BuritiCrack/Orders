@@ -50,7 +50,7 @@ namespace Orders_Frontend.Repositories
             return new HttpResponseWrapper<IActionResponse>(default, true, responseHttp);
         }
 
-        public async Task<HttpResponseWrapper<object>> Deleteync<T>(string url)
+        public async Task<HttpResponseWrapper<object>> DeleteAsync<T>(string url)
         {
             var responseHttp = await _httpClient.DeleteAsync(url);
 

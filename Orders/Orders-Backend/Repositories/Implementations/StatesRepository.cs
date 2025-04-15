@@ -20,6 +20,7 @@ namespace Orders_Backend.Repositories.Implementations
             var state = await _context.States
                 .Include(s => s.Cities)
                 .FirstOrDefaultAsync(s => s.Id == id);
+            
             if (state == null)
             {
                 return new ActionResponse<State>
@@ -38,13 +39,13 @@ namespace Orders_Backend.Repositories.Implementations
 
         public override async Task<ActionResponse<IEnumerable<State>>> GetAsync()
         {
-            var state = await _context.States
+            var states = await _context.States
                 .Include(s => s.Cities)
                 .ToListAsync();
-            return new ActionResponse<IEnumerable<State>>()
+            return new ActionResponse<IEnumerable<State>>
             {
                 WasSuccess = true,
-                Result = state
+                Result = states
             };
         }
     }

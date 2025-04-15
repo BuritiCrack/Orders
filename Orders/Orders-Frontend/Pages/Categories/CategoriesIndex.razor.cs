@@ -45,7 +45,7 @@ namespace Orders_Frontend.Pages.Categories
                 return;
             }
 
-            var responseHttp = await Repository.Deleteync<Category>($"/api/categories/{category.Id}");
+            var responseHttp = await Repository.DeleteAsync<Category>($"/api/categories/{category.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
