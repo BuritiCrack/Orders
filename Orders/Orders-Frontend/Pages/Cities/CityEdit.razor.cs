@@ -5,20 +5,20 @@ using Orders_Frontend.Shared;
 using Orders_Shared.Entities;
 using System.Net;
 
-namespace Orders_Frontend.Pages.States
+namespace Orders_Frontend.Pages.Cities
 {
-    public partial class StateEdit
+    public partial class CityEdit
     {
-        private State? state;
-        private FormWithName<State>? stateForm;
-        [Parameter] public int StateId { get; set; }
+        private City? city;
+        private FormWithName<City>? cityForm;
+        [Parameter] public int CityId { get; set; }
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
         protected override async Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<State>($"/api/states/{StateId}");
+            var responseHttp = await Repository.GetAsync<City>($"/api/cities/{CityId}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -31,12 +31,13 @@ namespace Orders_Frontend.Pages.States
                 return;
             }
 
-            state = responseHttp.Response;
+            city = responseHttp.Response;
         }
 
         private async Task SaveAsync()
-        { 
-            var responseHttp = await Repository.PutAsync($"/api/states", state);
+        {
+
+            var responseHttp = await Repository.PutAsync($"/api/cities", city);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -58,11 +59,11 @@ namespace Orders_Frontend.Pages.States
         }
         private void Return()
         {
-            if (stateForm is not null)
+            if (cityForm is not null)
             {
-                stateForm.FormPostedSuccessfully = true;
+                cityForm.FormPostedSuccessfully = true;
             }
-            NavigationManager.NavigateTo($"/countries/details/{state!.CountryId}");
+            NavigationManager.NavigateTo($"/states/details/{city!.StateId}");
         }
     }
 }
