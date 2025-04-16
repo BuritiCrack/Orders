@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orders_Backend.UnitOfWork.Interfaces;
+using Orders_Shared.DTOs;
 using Orders_Shared.Entities;
 using Orders_Shared.Responses;
 
@@ -16,7 +17,7 @@ namespace Orders_Backend.Controllers
             _statesUnitOfWork = statesUnitOfWork;
         }
 
-        [HttpGet]
+        [HttpGet("full")]
         public override async Task<IActionResult> GetAsync()
         {
             var action = await _statesUnitOfWork.GetAsync();
@@ -36,6 +37,28 @@ namespace Orders_Backend.Controllers
                 return Ok(action.Result);
             }
             return NotFound(action.Message);
+        }
+
+        [HttpGet]
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        {
+            var action = await _statesUnitOfWork.GetAsync(pagination);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
+        }
+
+        [HttpGet("totalPages")]
+        public override async Task<IActionResult> GetTotalPagesAsync([FromQuery] PaginationDTO pagination)
+        {
+            var action = await _statesUnitOfWork.GetTotalPagesAsync(pagination);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
         }
     }
 }
