@@ -14,11 +14,11 @@ namespace Orders_Backend.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
-            await CheckCountries();
-            await CheckCategories();
+            await CheckCountriesAsync();
+            await CheckCategoriesAsync();
         }
 
-        private async Task CheckCategories()
+        private async Task CheckCategoriesAsync()
         {
             if (!_context.Categories.Any())
             {
@@ -27,12 +27,28 @@ namespace Orders_Backend.Data
                 await _context.Categories.AddAsync(new Category { Name = "Marroquineria" });
                 await _context.Categories.AddAsync(new Category { Name = "Tecnologia" });
                 await _context.Categories.AddAsync(new Category { Name = "Jueguetes" });
+                await _context.Categories.AddAsync(new Category { Name = "Ropa" });
+                await _context.Categories.AddAsync(new Category { Name = "Deportes" });
+                await _context.Categories.AddAsync(new Category { Name = "Belleza" });
+                await _context.Categories.AddAsync(new Category { Name = "Salud" });
+                await _context.Categories.AddAsync(new Category { Name = "Alimentos" });
+                await _context.Categories.AddAsync(new Category { Name = "Mascotas" });
+                await _context.Categories.AddAsync(new Category { Name = "Libros" });
+                await _context.Categories.AddAsync(new Category { Name = "Accesorios" });
+                await _context.Categories.AddAsync(new Category { Name = "Electrodomesticos" });
+                await _context.Categories.AddAsync(new Category { Name = "Ferreteria" });
+                await _context.Categories.AddAsync(new Category { Name = "Construccion" });
+                await _context.Categories.AddAsync(new Category { Name = "Jardineria" });
+                await _context.Categories.AddAsync(new Category { Name = "Bebes" });
+                await _context.Categories.AddAsync(new Category { Name = "Papeleria" });
+                await _context.Categories.AddAsync(new Category { Name = "Cuidado Personal" });
+                await _context.Categories.AddAsync(new Category { Name = "Cuidado del Hogar" });
 
                 await _context.SaveChangesAsync();
             }
         }
 
-        private async Task CheckCountries()
+        private async Task CheckCountriesAsync()
         {
             if (!_context.Countries.Any())
             {
