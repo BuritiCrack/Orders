@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Orders_Backend.Data;
 using Orders_Backend.Helpers;
 using Orders_Backend.Repositories.Interfaces;
@@ -24,6 +23,11 @@ namespace Orders_Backend.Repositories.Implementations
                 .Include(c => c.States)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(pagination.Filter))
+            {
+                query = query.Where(c => c.Name.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
             return new ActionResponse<IEnumerable<Country>>()
             {
                 WasSuccess = true,
@@ -33,6 +37,23 @@ namespace Orders_Backend.Repositories.Implementations
                         .ToListAsync()
             };
         }
+
+        public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
+        {
+            var query = _context.Countries.AsQueryable();
+            if (!string.IsNullOrEmpty(pagination.Filter))
+            {
+                query = query.Where(c => c.Name.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+            double count = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(count / pagination.RecordsNumber);
+            return new ActionResponse<int>()
+            {
+                WasSuccess = true,
+                Result = totalPages
+            };
+        }
+
         public override async Task<ActionResponse<Country>> GetAsync(int id)
         {
             var country = await _context.Countries

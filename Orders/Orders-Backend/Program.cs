@@ -48,6 +48,9 @@ namespace Orders_Backend
             builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
             builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 
+            builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
+
             var app = builder.Build();
 
             //Inyecyamos el seedDB manualmente ya que el program no se deja inyectar
