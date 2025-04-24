@@ -16,7 +16,8 @@ namespace Orders_Frontend.Pages.States
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
-
+        [Parameter, SupplyParameterFromQuery] public string? Page { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public string? Filter { get; set; } = string.Empty;
         [Parameter] public int StateId { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -26,6 +27,11 @@ namespace Orders_Frontend.Pages.States
 
         private async Task SelectedPageAsync(int page)
         {
+            if (!string.IsNullOrWhiteSpace(Page))
+            {
+                page = Convert.ToInt32(Page);
+            }
+
             currentPage = page;
             await LoadAsync(page);
         }
@@ -45,7 +51,13 @@ namespace Orders_Frontend.Pages.States
 
         private async Task<bool> LoadCitiesAsync(int page)
         {
-            var responseHttp = await Repository.GetAsync<List<City>>($"/api/cities?id={StateId}&page={page}");
+            var url = $"/api/cities?id={StateId}&page={page}";
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+
+            var responseHttp = await Repository.GetAsync<List<City>>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -58,7 +70,13 @@ namespace Orders_Frontend.Pages.States
 
         private async Task LoadTotalPagesAsync()
         {
-            var responseHttp = await Repository.GetAsync<int>($"/api/cities/totalPages?id={StateId}");
+            var url = $"/api/cities/totalPages?id={StateId}";
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+
+            var responseHttp = await Repository.GetAsync<int>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -84,6 +102,19 @@ namespace Orders_Frontend.Pages.States
             }
             state = responseHttp.Response;
             return true;
+        }
+
+        private async Task CleanFilterAsync()
+        {
+            Filter = string.Empty;
+            await ApplyFilterAsync();
+        }
+
+        private async Task ApplyFilterAsync()
+        {
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task DeleteAsync(City city)
@@ -125,7 +156,6 @@ namespace Orders_Frontend.Pages.States
             });
 
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con exito");
-
         }
     }
 }
