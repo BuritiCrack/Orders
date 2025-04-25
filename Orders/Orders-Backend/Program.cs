@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Orders_Backend.Data;
@@ -5,6 +6,7 @@ using Orders_Backend.Repositories.Implementations;
 using Orders_Backend.Repositories.Interfaces;
 using Orders_Backend.UnitOfWork.Implementations;
 using Orders_Backend.UnitOfWork.Interfaces;
+using Orders_Shared.Entities;
 using System.Text.Json.Serialization;
 
 namespace Orders_Backend
@@ -50,6 +52,23 @@ namespace Orders_Backend
 
             builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
             builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
+
+            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+            builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
+
+            builder.Services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 0;
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
 
             var app = builder.Build();
 
