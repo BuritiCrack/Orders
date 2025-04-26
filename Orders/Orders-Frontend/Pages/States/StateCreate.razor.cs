@@ -1,4 +1,5 @@
 ﻿using CurrieTechnologies.Razor.SweetAlert2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Orders_Frontend.Repositories;
 using Orders_Frontend.Shared;
@@ -6,6 +7,7 @@ using Orders_Shared.Entities;
 
 namespace Orders_Frontend.Pages.States
 {
+    [Authorize(Roles = "Admin")]
     public partial class StateCreate
     {
         private State state = new();
