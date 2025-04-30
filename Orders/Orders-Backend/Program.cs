@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orders_Backend.Data;
 using Orders_Backend.Repositories.Implementations;
@@ -7,6 +9,7 @@ using Orders_Backend.Repositories.Interfaces;
 using Orders_Backend.UnitOfWork.Implementations;
 using Orders_Backend.UnitOfWork.Interfaces;
 using Orders_Shared.Entities;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Orders_Backend
@@ -23,12 +26,35 @@ namespace Orders_Backend
                 .AddControllers()
                 .AddJsonOptions(c => c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Orders API",
                     Version = "v1"
+                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        }, new string[] { } }
                 });
             });
 
@@ -69,6 +95,21 @@ namespace Orders_Backend
             })
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
+
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwtkey"]!)),
+                    ClockSkew = TimeSpan.Zero,
+                }
+
+                );
+
 
             var app = builder.Build();
 

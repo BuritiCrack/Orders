@@ -21,10 +21,12 @@ namespace Orders_Backend.Data
             await CheckCountriesAsync();
             await CheckCategoriesAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Jose", "Buritica", "jose@mimail.com", "311 7779 8681", "Calle Bello", UserType.Admin);
+            await CheckUserAsync("1010", "Tomate", "Bedoya", "tommy@mimail.com", "311 7779 8681",
+                "Calle Itagui", UserType.Admin);
         }
 
-        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
+        private async Task<User> CheckUserAsync(string document, string firstName, string lastName,
+            string email, string phone, string address, UserType userType)
         {
             var user = await _usersUnitOfWork.GetUserAsync(email);
             if (user == null)
