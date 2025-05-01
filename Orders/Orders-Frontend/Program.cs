@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Orders_Frontend.AuthenticationProviders;
 using Orders_Frontend.Repositories;
+using Orders_Frontend.Services;
 
 namespace Orders_Frontend;
 
@@ -19,7 +20,12 @@ public class Program
         builder.Services.AddScoped<IRepository, Repository>();
         builder.Services.AddSweetAlert2();
         builder.Services.AddAuthorizationCore();
-        builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderTest>();
+
+        builder.Services.AddScoped<AuthenticationProviderJWT>();
+        builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderJWT>(sp =>
+            sp.GetRequiredService<AuthenticationProviderJWT>());
+        builder.Services.AddScoped<ILoginServices, AuthenticationProviderJWT>(sp =>
+            sp.GetRequiredService<AuthenticationProviderJWT>());
 
         await builder.Build().RunAsync();
     }
