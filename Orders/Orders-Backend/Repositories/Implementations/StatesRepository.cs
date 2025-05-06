@@ -59,7 +59,7 @@ namespace Orders_Backend.Repositories.Implementations
                 .Where(s => s.Country!.Id == pagination.Id)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(pagination.Filter))
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 query = query.Where(s => s.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
@@ -87,7 +87,7 @@ namespace Orders_Backend.Repositories.Implementations
                 .Where(s => s.Country!.Id == pagination.Id)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(pagination.Filter))
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 query = query.Where(s => s.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }

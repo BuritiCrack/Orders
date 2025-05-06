@@ -19,10 +19,10 @@ namespace Orders_Backend.Repositories.Implementations
         public override async Task<ActionResponse<IEnumerable<City>>> GetAsync(PaginationDTO pagination)
         {
             var query = _context.Cities
-                .Where(c => c.State!.Country!.Id == pagination.Id)
+                .Where(c => c.State!.Id == pagination.Id)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(pagination.Filter))
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 query = query.Where(s => s.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
@@ -48,10 +48,10 @@ namespace Orders_Backend.Repositories.Implementations
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
             var query = _context.Cities
-                .Where(c => c.State!.Country!.Id == pagination.Id)
+                .Where(c => c.State!.Id == pagination.Id)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(pagination.Filter))
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 query = query.Where(s => s.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }

@@ -1,85 +1,141 @@
 ﻿@page "/Register"
 
-<h3>Registrar nuevo usuario</h3>
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <EditForm Model="_userDTO" OnvalidSubmit="CreateUserAsync">
+        <DataAnnotationsValidator />
 
-<EditForm Model="_userDTO" OnvalidSubmit="CreateUserAsync">
-    <DataAnnotationsValidator />
-    
-    <div class="row">
-        <div class="col-6">
-            <div class="mb-3" >
-                <label>Nombre:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.FirstName" />
-                    <ValidationMessage For="@(() => _userDTO.FirstName)" />
-                </div>
+        <div class="card">
+            <div class="card-header">
+                <span>
+                    <i class="bi bi-person-circle" /> Registrar Nuevo  Usuario
+                    <button class="btn btn-sm btn-primary float-end" type="submit"><i class="bi bi-person-add" /> Registrar</button>
+                </span>
             </div>
-            <div class="mb-3">
-                <label>Apellido:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.LastName" />
-                    <ValidationMessage For="@(() => _userDTO.LastName)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Documento:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.Document" />
-                    <ValidationMessage For="@(() => _userDTO.Document)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Teléfono:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.PhoneNumber" />
-                    <ValidationMessage For="@(() => _userDTO.PhoneNumber)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Dirección:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.Address" />
-                    <ValidationMessage For="@(() => _userDTO.Address)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Correo electrónico:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.Email" />
-                    <ValidationMessage For="@(() => _userDTO.Email)" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>Nombre:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.FirstName" />
+                                <ValidationMessage For="@(() => _userDTO.FirstName)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Apellido:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.LastName" />
+                                <ValidationMessage For="@(() => _userDTO.LastName)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Documento:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.Document" />
+                                <ValidationMessage For="@(() => _userDTO.Document)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Teléfono:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.PhoneNumber" />
+                                <ValidationMessage For="@(() => _userDTO.PhoneNumber)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Dirección:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.Address" />
+                                <ValidationMessage For="@(() => _userDTO.Address)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Correo electrónico:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.Email" />
+                                <ValidationMessage For="@(() => _userDTO.Email)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>País:</label>
+                            <div>
+                                <select class="form-select" @onchange="CountryChangeAsync">
+                                    <option value="0">Seleccione un país</option>
+                                    @if (countries is not null)
+                                    {
+                                        foreach (var country in countries)
+                                        {
+                                            <option value="@country.Id">@country.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Estado/Departamento:</label>
+                            <div>
+                                <select class="form-select" @onchange="StateChangeAsync">
+                                    <option value="0">Seleccione un estado/departamento</option>
+                                    @if (states is not null)
+                                    {
+                                        foreach (var state in states)
+                                        {
+                                            <option value="@state.Id">@state.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Ciudad:</label>
+                            <div>
+                                <select class="form-select" @bind="_userDTO.CityId">
+                                    <option value="0">Seleccione una ciudad</option>
+                                    @if (cities is not null)
+                                    {
+                                        foreach (var city in cities)
+                                        {
+                                            <option value="@city.Id">@city.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <ValidationMessage For="@(() => _userDTO.CityId)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Foto:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@_userDTO.Photo" />
+                                <ValidationMessage For="@(() => _userDTO.Photo)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Contraseña:</label>
+                            <div>
+                                <InputText type="password" class="form-control" @bind-Value="@_userDTO.Password" />
+                                <ValidationMessage For="@(() => _userDTO.Password)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Confirmar contraseña:</label>
+                            <div>
+                                <InputText type="password" class="form-control" @bind-Value="@_userDTO.ConfirmPassword" />
+                                <ValidationMessage For="@(() => _userDTO.ConfirmPassword)" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="mb-3">
-                <label>Ciudad:</label>
-                <div>
-                    <InputNumber class="form-control" @bind-Value="@_userDTO.CityId" />
-                    <ValidationMessage For="@(() => _userDTO.CityId)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Foto:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.Photo" />
-                    <ValidationMessage For="@(() => _userDTO.Photo)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Contraseña:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.Password"/>
-                    <ValidationMessage For="@(() => _userDTO.Password)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Confirmar contraseña:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@_userDTO.ConfirmPassword" />
-                    <ValidationMessage For="@(() => _userDTO.ConfirmPassword)" />
-                </div>
-            </div>          
-        </div>
-    </div>
-    <button class="btn btn-primary" type="submit">Registrar</button>
-</EditForm>
+
+    </EditForm>
+
+}
+

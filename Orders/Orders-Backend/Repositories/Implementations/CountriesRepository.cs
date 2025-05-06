@@ -41,7 +41,7 @@ namespace Orders_Backend.Repositories.Implementations
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
             var query = _context.Countries.AsQueryable();
-            if (!string.IsNullOrEmpty(pagination.Filter))
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 query = query.Where(c => c.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
