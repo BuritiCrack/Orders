@@ -110,13 +110,6 @@ else
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Foto:</label>
-                            <div>
-                                <InputText class="form-control" @bind-Value="@_userDTO.Photo" />
-                                <ValidationMessage For="@(() => _userDTO.Photo)" />
-                            </div>
-                        </div>
-                        <div class="mb-3">
                             <label>Contraseña:</label>
                             <div>
                                 <InputText type="password" class="form-control" @bind-Value="@_userDTO.Password" />
@@ -130,11 +123,13 @@ else
                                 <ValidationMessage For="@(() => _userDTO.ConfirmPassword)" />
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl"/>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </EditForm>
 
 }

@@ -5,6 +5,7 @@ using Orders_Frontend.Services;
 using Orders_Shared.DTOs;
 using Orders_Shared.Entities;
 using Orders_Shared.Enums;
+using System.Runtime.CompilerServices;
 
 namespace Orders_Frontend.Pages.Auth
 {
@@ -15,6 +16,7 @@ namespace Orders_Frontend.Pages.Auth
         private List<State>? states;
         private List<City>? cities;
         private bool loading;
+        private string? imageUrl;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -26,6 +28,11 @@ namespace Orders_Frontend.Pages.Auth
             await LoadCountriesAsync();
         }
 
+        private void ImageSelected(string imageBase64)
+        {
+            _userDTO.Photo = imageBase64;
+            imageUrl = null;
+        }
         private async Task LoadCountriesAsync()
         {
             var responseHttp = await Repository.GetAsync<List<Country>>("/api/countries/combo");
