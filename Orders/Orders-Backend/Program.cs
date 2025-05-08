@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orders_Backend.Data;
+using Orders_Backend.Helpers;
 using Orders_Backend.Repositories.Implementations;
 using Orders_Backend.Repositories.Interfaces;
 using Orders_Backend.UnitOfWork.Implementations;
@@ -63,6 +64,8 @@ namespace Orders_Backend
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddTransient<SeedDb>();
+
+            builder.Services.AddScoped<IFileStorage, FileStorage>();
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
