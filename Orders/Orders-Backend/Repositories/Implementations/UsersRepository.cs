@@ -32,6 +32,11 @@ namespace Orders_Backend.Repositories.Implementations
             await _userManager.AddToRoleAsync(user, roleName);
         }
 
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPssword)
+        {
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPssword);
+        }
+
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExist = await _roleManager.RoleExistsAsync(roleName);
@@ -47,10 +52,20 @@ namespace Orders_Backend.Repositories.Implementations
         public async Task<User> GetUserAsync(string email)
         {
             var user = await _context.Users
-                .Include(u => u.City)
-                .ThenInclude(c => c.State)
+                .Include(u => u.City!)
+                .ThenInclude(c => c.State!)
                 .ThenInclude(s => s.Country)
                 .FirstOrDefaultAsync(u => u.Email == email);
+            return user!;
+        }
+
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.City!)
+                .ThenInclude(c => c.State!)
+                .ThenInclude(s => s.Country)
+                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
             return user!;
         }
 
@@ -67,6 +82,11 @@ namespace Orders_Backend.Repositories.Implementations
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
     }
 }
