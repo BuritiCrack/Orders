@@ -19,12 +19,13 @@ namespace Orders_Frontend.Shared
 
             foreach (var imagen in imagenes)
             {
-                var arraBytes = new byte[imagen.Size];
-                await imagen.OpenReadStream().ReadAsync(arraBytes);
-                imageBase64 = Convert.ToBase64String(arraBytes);
+                var arrBytes = new byte[imagen.Size];
+                await imagen.OpenReadStream().ReadAsync(arrBytes);
+                imageBase64 = Convert.ToBase64String(arrBytes);
                 ImageURL = null;
                 await ImageSelected.InvokeAsync(imageBase64);
                 StateHasChanged();
+
             }
         }
     }

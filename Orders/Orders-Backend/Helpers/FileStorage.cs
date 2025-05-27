@@ -1,21 +1,20 @@
-﻿
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.OpenApi.Validations;
-using System.Runtime.CompilerServices;
 
 namespace Orders_Backend.Helpers
 {
     public class FileStorage : IFileStorage
     {
-        private readonly string _conectionString;
+        private readonly string _connectionString;
+
         public FileStorage(IConfiguration configuration)
         {
-            _conectionString = configuration.GetConnectionString("AzureStorage")!;
+            _connectionString = configuration.GetConnectionString("AzureStorage")!;
         }
+
         public async Task RemoveFileAsync(string path, string containerName)
         {
-            var client = new BlobContainerClient(_conectionString, containerName);
+            var client = new BlobContainerClient(_connectionString, containerName);
             await client.CreateIfNotExistsAsync();
             var fileName = Path.GetFileName(path);
             var blob = client.GetBlobClient(fileName);
@@ -24,7 +23,7 @@ namespace Orders_Backend.Helpers
 
         public async Task<string> SaveFileAsync(byte[] content, string extention, string containerName)
         {
-            var client = new BlobContainerClient(_conectionString, containerName);
+            var client = new BlobContainerClient(_connectionString, containerName);
             await client.CreateIfNotExistsAsync();
             client.SetAccessPolicy(PublicAccessType.Blob);
             var fileName = $"{Guid.NewGuid()}{extention}";

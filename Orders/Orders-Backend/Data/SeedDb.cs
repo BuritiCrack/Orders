@@ -1,4 +1,5 @@
-﻿using Orders_Backend.UnitOfWork.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Orders_Backend.UnitOfWork.Interfaces;
 using Orders_Shared.Entities;
 using Orders_Shared.Enums;
 
@@ -21,7 +22,7 @@ namespace Orders_Backend.Data
             await CheckCountriesAsync();
             await CheckCategoriesAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Tomate", "Bedoya", "tommy@mimail.com", "311 7779 8681",
+            await CheckUserAsync("1010", "Tomate", "Bedoya", "tommy@yopmail.com", "311 7779 8681",
                 "Calle Itagui", UserType.Admin);
         }
 
@@ -31,6 +32,9 @@ namespace Orders_Backend.Data
             var user = await _usersUnitOfWork.GetUserAsync(email);
             if (user == null)
             {
+                var city = await _context.Cities.FirstOrDefaultAsync(x => x.Name == "Medellín");
+                city ??= await _context.Cities.FirstOrDefaultAsync();
+
                 user = new User
                 {
                     Document = document,
@@ -40,7 +44,7 @@ namespace Orders_Backend.Data
                     PhoneNumber = phone,
                     Address = address,
                     UserName = email,
-                    City = _context.Cities.FirstOrDefault(),
+                    City = city,
                     UserType = userType
                 };
 
@@ -49,6 +53,9 @@ namespace Orders_Backend.Data
                 {
                     await _usersUnitOfWork.AddUserToRoleAsync(user, userType.ToString());
                 }
+                var token = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
+                await _usersUnitOfWork.ConfirmEmailAsync(user, token);
+
             }
             return user;
         }

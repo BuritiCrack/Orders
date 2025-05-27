@@ -5,7 +5,6 @@ using Orders_Frontend.Services;
 using Orders_Shared.DTOs;
 using Orders_Shared.Entities;
 using Orders_Shared.Enums;
-using System.Runtime.CompilerServices;
 
 namespace Orders_Frontend.Pages.Auth
 {
@@ -33,6 +32,7 @@ namespace Orders_Frontend.Pages.Auth
             _userDTO.Photo = imageBase64;
             imageUrl = null;
         }
+
         private async Task LoadCountriesAsync()
         {
             var responseHttp = await Repository.GetAsync<List<Country>>("/api/countries/combo");
@@ -93,8 +93,9 @@ namespace Orders_Frontend.Pages.Auth
         {
             _userDTO.UserName = _userDTO.Email;
             _userDTO.UserType = UserType.User;
+
             loading = true;
-            var responseHttp = await Repository.PostAsync<UserDTO, TokenDTO>("/api/accounts/CreateUser", _userDTO);
+            var responseHttp = await Repository.PostAsync<UserDTO>("/api/accounts/CreateUser", _userDTO);
             loading = false;
             if (responseHttp.Error)
             {
@@ -103,7 +104,9 @@ namespace Orders_Frontend.Pages.Auth
                 return;
             }
 
-            await LoginServices.LoginAsync(responseHttp.Response!.Token);
+            await SweetAlertService.FireAsync("Confirmación", "Su cuenta ha sido creada con éxito." +
+                "Se te ha enviado un correo de confirmacion con la instrucciones para activar su usuario.",
+                SweetAlertIcon.Info);
             NavigationManager.NavigateTo("/");
         }
     }

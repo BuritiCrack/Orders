@@ -33,12 +33,9 @@ namespace Orders_Backend.Repositories.Implementations
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException != null)
-                {
-                    if (ex.InnerException!.Message.Contains("duplicate"))
-                    {
-                        return DbUpdateExceptionActionResponse();
-                    }
+                if (ex.InnerException!.Message.Contains("duplicate"))
+                {  
+                        return DbUpdateExceptionActionResponse();  
                 }
 
                 return new ActionResponse<T>

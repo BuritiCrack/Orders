@@ -20,7 +20,7 @@ namespace Orders_Frontend.Pages.Auth
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private ILoginServices LoginServices { get; set; } = null!;
+        [Inject] private ILoginServices LoginService { get; set; } = null!;
 
         protected override async Task OnInitializedAsync()
         {
