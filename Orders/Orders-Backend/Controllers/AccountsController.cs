@@ -36,6 +36,24 @@ namespace Orders_Backend.Controllers
             _container = "users";
         }
 
+        [HttpPost("ResendToken")]
+        public async Task<IActionResult> ResendTokenAsync([FromBody] EmailDTO model)
+        {
+            var user = await _usersUnitOfWork.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var response = await SendConfirmationEmailAsync(user);
+            if (response.WasSuccess)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
         {
