@@ -32,6 +32,9 @@ namespace Orders_Backend.UnitOfWork.Implementations
         public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
             => await _usersRepository.GenerateEmailConfirmationTokenAsync(user);
 
+        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+            => await _usersRepository.GeneratePasswordResetTokenAsync(user);
+
         public async Task<User> GetUserAsync(string email)
             => await _usersRepository.GetUserAsync(email);
 
@@ -46,6 +49,9 @@ namespace Orders_Backend.UnitOfWork.Implementations
 
         public Task LogoutAsync()
             => _usersRepository.LogoutAsync();
+
+        public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
+            => await _usersRepository.ResetPasswordAsync(user, token, password);
 
         public async Task<IdentityResult> UpdateUserAsync(User user)
             => await _usersRepository.UpdateUserAsync(user);
