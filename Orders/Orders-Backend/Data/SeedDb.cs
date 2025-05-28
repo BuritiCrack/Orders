@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MailKit.Search;
+using Microsoft.EntityFrameworkCore;
 using Orders_Backend.UnitOfWork.Interfaces;
 using Orders_Shared.Entities;
 using Orders_Shared.Enums;
@@ -19,6 +20,7 @@ namespace Orders_Backend.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+            await CheckCountriesFullAsync();
             await CheckCountriesAsync();
             await CheckCategoriesAsync();
             await CheckRolesAsync();
@@ -26,6 +28,14 @@ namespace Orders_Backend.Data
                 "Calle Itagui", UserType.Admin);
         }
 
+        private async Task CheckCountriesFullAsync()
+        {
+            if (!_context.Countries.Any())
+            {
+                var countriesStatesCitiesSQLScript = File.ReadAllText("Data\\CountriesStatesCities.sql");
+                await _context.Database.ExecuteSqlRawAsync(countriesStatesCitiesSQLScript);
+            }
+        }
         private async Task<User> CheckUserAsync(string document, string firstName, string lastName,
             string email, string phone, string address, UserType userType)
         {
