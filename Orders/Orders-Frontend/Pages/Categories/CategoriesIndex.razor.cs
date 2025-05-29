@@ -1,4 +1,6 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Orders_Frontend.Repositories;
@@ -20,6 +22,8 @@ namespace Orders_Frontend.Pages.Categories
         [Parameter, SupplyParameterFromQuery] public string? Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string? Filter { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
+
 
         public List<Category>? Categories { get; set; }
 
@@ -28,6 +32,25 @@ namespace Orders_Frontend.Pages.Categories
             await LoadAsync();
         }
 
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
+
+            if (isEdit)
+            {
+                modalReference = Modal.Show<CategoryEdit>(string.Empty, new ModalParameters().Add("id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<CategoryCreate>();
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
         private async Task SelectedRecordsNumberAsync(int recordsNumber)
         {
             RecordsNumber = recordsNumber;

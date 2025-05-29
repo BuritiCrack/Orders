@@ -1,3 +1,4 @@
+using Blazored.Modal;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -20,6 +21,7 @@ public class Program
         builder.Services.AddScoped<IRepository, Repository>();
         builder.Services.AddSweetAlert2();
         builder.Services.AddAuthorizationCore();
+        builder.Services.AddBlazoredModal();
 
         builder.Services.AddScoped<AuthenticationProviderJWT>();
         builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderJWT>(sp =>
