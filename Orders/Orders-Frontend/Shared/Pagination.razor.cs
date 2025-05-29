@@ -4,13 +4,33 @@ namespace Orders_Frontend.Shared
 {
     public partial class Pagination
     {
-        private List<PageModel> _links = null!;
+        private List<PageModel> _links = [];
+        private List<OptionModel> _options = [];
+        private int selectedOptionValue = 10;
         [Parameter] public int TotalPages { get; set; }
         [Parameter] public int ItemsPerPage { get; set; } = 10;
         [Parameter] public int CurrentPage { get; set; } = 1;
         [Parameter] public EventCallback<int> SelectedPage { get; set; }
+        [Parameter] public EventCallback<int> RecordsNumber { get; set; }
 
         protected override void OnParametersSet()
+        {
+            BuildPages();
+            BuildOptions();
+        }
+
+        private void BuildOptions()
+        {
+            _options =
+                [
+                new OptionModel {Value = 10, Name = "10"},
+                new OptionModel {Value = 25, Name = "25"},
+                new OptionModel {Value = 50, Name = "50"},
+                new OptionModel {Value = int.MaxValue, Name = "Todos"},
+                ];
+        }
+
+        private void BuildPages()
         {
             _links = new List<PageModel>();
             // Creamos el boton anterior
@@ -63,6 +83,16 @@ namespace Orders_Frontend.Shared
             });
         }
 
+        private async Task InternalRecordsNumberSelected(ChangeEventArgs e)
+        {
+            if (e.Value != null)
+            {
+                selectedOptionValue = Convert.ToInt32(e.Value.ToString());
+            }
+
+            await RecordsNumber.InvokeAsync(selectedOptionValue);
+        }
+
         private async Task InternalSelectPage(PageModel pageModel)
         {
             if (pageModel.Page == CurrentPage || pageModel.Page == 0)
@@ -70,6 +100,12 @@ namespace Orders_Frontend.Shared
                 return;
             }
             await SelectedPage.InvokeAsync(pageModel.Page);
+        }
+
+        private class OptionModel()
+        {
+            public string Name { get; set; } = null!;
+            public int Value { get; set; }
         }
         private class PageModel
         {

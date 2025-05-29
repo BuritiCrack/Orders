@@ -20,6 +20,8 @@ namespace Orders_Frontend.Pages.States
         [Inject] private IRepository Repository { get; set; } = null!;
         [Parameter, SupplyParameterFromQuery] public string? Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string? Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+
         [Parameter] public int StateId { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -27,6 +29,13 @@ namespace Orders_Frontend.Pages.States
             await LoadAsync();
         }
 
+        private async Task SelectedRecordsNumberAsync(int recordsNumber)
+        {
+            RecordsNumber = recordsNumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
         private async Task FilterCallBack(string filter)
         {
             Filter = filter;
@@ -59,7 +68,8 @@ namespace Orders_Frontend.Pages.States
 
         private async Task<bool> LoadCitiesAsync(int page)
         {
-            var url = $"/api/cities?id={StateId}&page={page}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"/api/cities?id={StateId}&page={page}&recordsNumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -78,7 +88,8 @@ namespace Orders_Frontend.Pages.States
 
         private async Task LoadTotalPagesAsync()
         {
-            var url = $"/api/cities/totalPages?id={StateId}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"/api/cities/totalPages?id={StateId}&recordsNumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -112,6 +123,11 @@ namespace Orders_Frontend.Pages.States
             return true;
         }
 
+        private void ValidateRecordsNumber(int recordsNumber)
+        {
+            if (recordsNumber == 0)
+                RecordsNumber = 10;
+        }
         private async Task ApplyFilterAsync()
         {
             int page = 1;

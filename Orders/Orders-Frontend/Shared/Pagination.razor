@@ -9,6 +9,15 @@
                     
             </li>
         }
+        <li class="mx-2">
+            <select class="form-select custom-select" @onchange="InternalRecordsNumberSelected">
+                @foreach (var option in _options)
+                {
+                    <option value="@option.Value">@option.Name</option>
+                }
+            </select>
+        </li>
+
     </ul>
 </nav>
 
