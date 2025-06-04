@@ -124,14 +124,15 @@ code {
     }
 
         .selectable-ul li:hover {
-            background-color: #08c
+            background-color: #08c;
+            color: white;
         }
 
 .multiple-selector-botones {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5px
+    padding: 5px;
 }
 
     .multiple-selector-botones button {
