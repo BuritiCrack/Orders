@@ -10,15 +10,36 @@ namespace Orders_Backend.Controllers
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
-
     public class ProductsController : GenericController<Product>
     {
         private readonly IProductsUnitOfWork _productsUnitOfWork;
 
         public ProductsController(IGenericUnitOfWork<Product> unitOfWork, IProductsUnitOfWork productsUnitOfWork)
-            :base(unitOfWork)
+            : base(unitOfWork)
         {
             _productsUnitOfWork = productsUnitOfWork;
+        }
+
+        [HttpPost("addImages")]
+        public async Task<IActionResult> PostAddImagesAsync(ImageDTO imageDTO)
+        {
+            var action = await _productsUnitOfWork.AddImageAsync(imageDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
+        }
+
+        [HttpPost("removeLastImage")]
+        public async Task<IActionResult> PostRemoveLastImageAsync(ImageDTO imageDTO)
+        {
+            var action = await _productsUnitOfWork.RemoveLastImageAsync(imageDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
         }
 
         [HttpGet]
@@ -34,7 +55,7 @@ namespace Orders_Backend.Controllers
 
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetTotalPagesAsync([FromQuery] PaginationDTO pagination)
-        { 
+        {
             var action = await _productsUnitOfWork.GetTotalPagesAsync(pagination);
             if (action.WasSuccess)
             {
