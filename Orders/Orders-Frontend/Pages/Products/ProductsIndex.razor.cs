@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Orders_Frontend.Repositories;
 using Orders_Shared.Entities;
+using System.Net;
 
 namespace Orders_Frontend.Pages.Products
 {
@@ -118,8 +119,8 @@ namespace Orders_Frontend.Pages.Products
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
+            
             var confirm = string.IsNullOrEmpty(result.Value);
-
             if (confirm)
             {
                 return;
@@ -129,7 +130,7 @@ namespace Orders_Frontend.Pages.Products
 
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
                     NavigationManager.NavigateTo("/");
                     return;
@@ -141,6 +142,14 @@ namespace Orders_Frontend.Pages.Products
             }
 
             await LoadAsync(1);
+            var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3500
+            });
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro eliminado con éxito.");
         }
 
         private async Task ApplyFilterAsync()
