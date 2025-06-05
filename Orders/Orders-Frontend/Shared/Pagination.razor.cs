@@ -12,6 +12,7 @@ namespace Orders_Frontend.Shared
         [Parameter] public int CurrentPage { get; set; } = 1;
         [Parameter] public EventCallback<int> SelectedPage { get; set; }
         [Parameter] public EventCallback<int> RecordsNumber { get; set; }
+        [Parameter] public bool IsHome { get; set; }
 
         protected override void OnParametersSet()
         {
@@ -21,13 +22,26 @@ namespace Orders_Frontend.Shared
 
         private void BuildOptions()
         {
-            _options =
+            if (IsHome)
+            {
+                _options =
+                [
+                    new OptionModel { Value = 8, Name = "8" },
+                    new OptionModel { Value = 16, Name = "16" },
+                    new OptionModel { Value = 32, Name = "32" },
+                    new OptionModel { Value = int.MaxValue, Name = "Todos" },
+                ];
+            }
+            else
+            {
+                _options =
                 [
                 new OptionModel {Value = 10, Name = "10"},
                 new OptionModel {Value = 25, Name = "25"},
                 new OptionModel {Value = 50, Name = "50"},
                 new OptionModel {Value = int.MaxValue, Name = "Todos"},
                 ];
+            }
         }
 
         private void BuildPages()
@@ -107,6 +121,7 @@ namespace Orders_Frontend.Shared
             public string Name { get; set; } = null!;
             public int Value { get; set; }
         }
+
         private class PageModel
         {
             public string Text { get; set; } = null!;
