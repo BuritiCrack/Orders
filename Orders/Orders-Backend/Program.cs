@@ -92,6 +92,9 @@ namespace Orders_Backend
             builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
             builder.Services.AddScoped<IProductsUnitOfWork, ProductsUnitOfWork>();
 
+            builder.Services.AddScoped<ITemporalOrdersRepository, TemporalOrdersRepository>();
+            builder.Services.AddScoped<ITemporalOrdersUnitOfWork, TemporalOrdersUnitOfWork>();
+
             builder.Services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
