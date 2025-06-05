@@ -20,6 +20,7 @@ namespace Orders_Backend.Controllers
             _productsUnitOfWork = productsUnitOfWork;
         }
 
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(int id)
         {
@@ -53,6 +54,7 @@ namespace Orders_Backend.Controllers
             return BadRequest(action.Message);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
@@ -64,6 +66,7 @@ namespace Orders_Backend.Controllers
             return BadRequest();
         }
 
+        [AllowAnonymous]
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetTotalPagesAsync([FromQuery] PaginationDTO pagination)
         {
@@ -75,6 +78,7 @@ namespace Orders_Backend.Controllers
             return BadRequest();
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
