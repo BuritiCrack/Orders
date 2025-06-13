@@ -54,5 +54,28 @@ namespace Orders_Backend.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _ordersUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return NotFound(response.Message);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(OrderDTO orderDTO)
+        {
+            var response = await _ordersUnitOfWork.UpdateFullAsync(User.Identity!.Name!, orderDTO);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest(response.Message);
+        }
+
     }
 }
