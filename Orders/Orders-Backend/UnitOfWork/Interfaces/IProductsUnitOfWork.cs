@@ -22,5 +22,6 @@ namespace Orders_Backend.UnitOfWork.Interfaces
 
         Task<ActionResponse<Product>> UpdateFullAsync(ProductDTO productDTO);
 
+        Task<ActionResponse<Product>> UpdateAsync(Product product);
     }
 }

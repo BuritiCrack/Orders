@@ -70,6 +70,7 @@ namespace Orders_Backend
 
             builder.Services.AddScoped<IFileStorage, FileStorage>();
             builder.Services.AddScoped<IMailHelper, MailHelper>();
+            builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
@@ -94,6 +95,9 @@ namespace Orders_Backend
 
             builder.Services.AddScoped<ITemporalOrdersRepository, TemporalOrdersRepository>();
             builder.Services.AddScoped<ITemporalOrdersUnitOfWork, TemporalOrdersUnitOfWork>();
+
+            builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+            builder.Services.AddScoped<IOrdersUnitOfWork, OrdersUnitOfWork>();
 
             builder.Services.AddIdentity<User, IdentityRole>(options =>
             {
