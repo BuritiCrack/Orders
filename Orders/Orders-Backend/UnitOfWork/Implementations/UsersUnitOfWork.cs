@@ -3,6 +3,7 @@ using Orders_Backend.Repositories.Interfaces;
 using Orders_Backend.UnitOfWork.Interfaces;
 using Orders_Shared.DTOs;
 using Orders_Shared.Entities;
+using Orders_Shared.Responses;
 
 namespace Orders_Backend.UnitOfWork.Implementations
 {
@@ -14,6 +15,7 @@ namespace Orders_Backend.UnitOfWork.Implementations
         {
             _usersRepository = usersRepository;
         }
+
         public async Task<IdentityResult> AddUserAsync(User user, string password)
             => await _usersRepository.AddUserAsync(user, password);
 
@@ -55,5 +57,11 @@ namespace Orders_Backend.UnitOfWork.Implementations
 
         public async Task<IdentityResult> UpdateUserAsync(User user)
             => await _usersRepository.UpdateUserAsync(user);
+
+        public async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination)
+            => await _usersRepository.GetAsync(pagination);
+
+        public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
+            => await _usersRepository.GetTotalPagesAsync(pagination);
     }
 }

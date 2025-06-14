@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Orders_Shared.DTOs;
 using Orders_Shared.Entities;
+using Orders_Shared.Responses;
 
 namespace Orders_Backend.UnitOfWork.Interfaces
 {
@@ -33,5 +34,9 @@ namespace Orders_Backend.UnitOfWork.Interfaces
         Task<SignInResult> LoginAsync(LoginDTO model);
 
         Task LogoutAsync();
+
+        Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination);
+
+        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
     }
 }

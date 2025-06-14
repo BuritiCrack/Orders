@@ -19,8 +19,9 @@ namespace Orders_Frontend.Pages.Auth
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        [Inject] private ILoginServices LoginServices { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
+        [Parameter, SupplyParameterFromQuery] public bool IsAdmin { get; set; }
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -93,6 +94,11 @@ namespace Orders_Frontend.Pages.Auth
         {
             _userDTO.UserName = _userDTO.Email;
             _userDTO.UserType = UserType.User;
+
+            if (IsAdmin)
+            {
+                _userDTO.UserType = UserType.Admin;
+            }
 
             loading = true;
             var responseHttp = await Repository.PostAsync<UserDTO>("/api/accounts/CreateUser", _userDTO);
