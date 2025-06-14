@@ -13,7 +13,7 @@ namespace Orders_Backend.Repositories.Implementations
         private readonly DataContext _context;
         private readonly IFileStorage _fileStorage;
 
-        public ProductsRepository(DataContext context,IFileStorage fileStorage):base(context)
+        public ProductsRepository(DataContext context, IFileStorage fileStorage) : base(context)
         {
             _context = context;
             _fileStorage = fileStorage;
@@ -25,7 +25,7 @@ namespace Orders_Backend.Repositories.Implementations
                 .Include(x => x.ProductCategories)
                 .Include(x => x.ProductImages)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if(product == null)
+            if (product == null)
             {
                 return new ActionResponse<Product>
                 {
@@ -129,6 +129,7 @@ namespace Orders_Backend.Repositories.Implementations
                 Result = imageDTO
             };
         }
+
         public async Task<ActionResponse<Product>> AddFullAsync(ProductDTO productDTO)
         {
             try
@@ -179,7 +180,7 @@ namespace Orders_Backend.Repositories.Implementations
                     Message = "Ya existe un producto con el mismo nombre."
                 };
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return new ActionResponse<Product>
                 {
@@ -266,6 +267,11 @@ namespace Orders_Backend.Repositories.Implementations
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
+            if (!string.IsNullOrWhiteSpace(pagination.CategoryFilter))
+            {
+                queryable = queryable.Where(x => x.ProductCategories!.Any(y => y.Category.Name == pagination.CategoryFilter));
+            }
+
             return new ActionResponse<IEnumerable<Product>>
             {
                 WasSuccess = true,
@@ -283,6 +289,11 @@ namespace Orders_Backend.Repositories.Implementations
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(pagination.CategoryFilter))
+            {
+                queryable = queryable.Where(x => x.ProductCategories!.Any(y => y.Category.Name == pagination.CategoryFilter));
             }
 
             double count = await queryable.CountAsync();
@@ -317,7 +328,5 @@ namespace Orders_Backend.Repositories.Implementations
                 Result = product
             };
         }
-
-
     }
 }

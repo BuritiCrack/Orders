@@ -15,8 +15,13 @@ namespace Orders_Frontend.Pages
         private int totalPages;
         private int counter = 0;
         private bool isAuthenticated;
+        private string allCategories = "all_categories_list";
+
 
         public List<Product>? Products { get; set; }
+        public List<Category>? Categories { get; set; }
+        public string CategoryFilter { get; set; } = string.Empty;
+
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
@@ -35,8 +40,19 @@ namespace Orders_Frontend.Pages
         {
             await CheckIsAuthenticatedAsync();
             await LoadCounterAsync();
+            await LoadCategoriesAsync();
         }
 
+        private async Task LoadCategoriesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<Category>>("api/categories/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            }
+            Categories = responseHttp.Response;
+        }
         private async Task CheckIsAuthenticatedAsync()
         {
             var authenticationState = await authenticationStateTask;
@@ -120,8 +136,20 @@ namespace Orders_Frontend.Pages
             await LoadAsync(page);
         }
 
-        private async Task LoadAsync(int page = 1)
+        private async Task LoadAsync(int page = 1, string category = "")
         {
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                if (category == allCategories)
+                {
+                    CategoryFilter = string.Empty;
+                }
+                else
+                {
+                    CategoryFilter = category;
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(Page))
             {
                 page = Convert.ToInt32(Page);
@@ -150,6 +178,10 @@ namespace Orders_Frontend.Pages
             {
                 url += $"&filter={Filter}";
             }
+            if (!string.IsNullOrEmpty(CategoryFilter))
+            {
+                url += $"&CategoryFilter={CategoryFilter}";
+            }
 
             var response = await Repository.GetAsync<List<Product>>(url);
             if (response.Error)
@@ -169,6 +201,10 @@ namespace Orders_Frontend.Pages
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
+            }
+            if (!string.IsNullOrEmpty(CategoryFilter))
+            {
+                url += $"&CategoryFilter={CategoryFilter}";
             }
 
             var response = await Repository.GetAsync<int>(url);
